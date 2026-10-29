@@ -95,6 +95,6 @@ Toutes les décisions sont justifiées dans `docs/decisions.md` (37 entrées, do
 - `notebooks/01_exploration.ipynb`, `tests/`, `docs/`, `scripts/verify_sources.py`
 - `data/raw/`, `data/referentiels/` : **ne jamais modifier** (SHA-256 dans `docs/checksums_sources.txt`)
 
-## 8. Test à blanc (pour un autre membre de l'équipe)
+## 8. Test 
 Dans un dossier vierge : suivre les sections 1 et 2, puis vérifier que `python -m pytest -q` est vert, que `python -m src.main`
 affiche 15 contrôles `[OK]`, et que le notebook s'exécute avec *Run All* sans erreur.
