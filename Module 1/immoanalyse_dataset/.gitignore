@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+data/processed/
+data/quarantine/
+reports/*.json
+reports/*.csv
