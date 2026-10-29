@@ -18,6 +18,12 @@ Chaque module a une seule responsabilité. Le flux de données va toujours de ga
 | `src/loaders/` | Lecture, renommage des colonnes, provenance | Aucune conversion de valeur |
 | `src/processing/` | `construire_bien` : brut -> `Bien` | Ne décide jamais de la quarantaine |
 | `src/validation/` | `RegleValidation`, catalogue, `Validateur`, taux | Ne modifie jamais un `Bien` |
+| `src/loaders/sources.py` | 5 chargeurs, `charger_toutes_les_sources`, `dataframe_brut_unifie` | Aucune conversion de valeur |
+| `src/loaders/inventaire.py` | Inventaire initial des anomalies (volumes, manquants, formats, doublons bruts) | Ne corrige ni ne supprime rien |
+| `src/processing/doublons.py` | Doublons exacts, rapprochement (doublons probables, conflits), `id_bien`, fusion | Ne regarde jamais l'identifiant local |
+| `src/processing/export.py` | Écriture CSV / JSON | Aucune règle |
+| `src/pipeline.py` | Orchestre phases 3-4 et écrit les sorties | Aucune règle métier propre |
+| `src/main.py` | Point d'entrée (`python -m src.main`) | |
 
 ## Classes
 
@@ -33,3 +39,13 @@ Chaque module a une seule responsabilité. Le flux de données va toujours de ga
 - **Corrigé** : une valeur reçue a été modifiée de façon fiable (journal `corrections`).
 - **Valeur inférée** : une valeur absente de la source a été déduite (journal `inferences`). Ce n'est pas une correction.
 - **Entièrement conforme** : aucune règle non conforme. Une règle non applicable (ex. loyer sur une vente) ne compte pas contre l'enregistrement.
+
+## Flux des phases 3 et 4
+
+```
+5 chargeurs -> dédoublonnage exact -> construire_bien -> Validateur -> rapprocher (retenus seulement) -> sorties
+ (dict bruts)   (écartés, tracés)     (normaliser)      (statut final)   (id_bien, doublons, conflits)
+```
+
+Catégories finales, exclusives : doublon exact écarté | quarantaine | conservé avec avertissement | entièrement conforme.
+`retenus + quarantaine + doublons exacts écartés = total reçu` (vérifié par `controle_total_ok`).

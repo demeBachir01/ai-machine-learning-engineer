@@ -89,3 +89,23 @@ COLONNES_BRUTES_CIBLE = (
 
 # Types de bien pour lesquels le nombre de chambres est contrôlé (cahier §6.2)
 TYPES_BIEN_CHAMBRES_CONTROLEES = ("Appartement", "Studio")
+
+# --- Phase 4 : rapprochement des doublons probables et des conflits (décisions 5, 25, 26) ---
+# Priorité de fusion, de la source la plus fiable à la moins fiable (plan de projet §4.3).
+PRIORITE_SOURCES = ("notaires", "agence", "plateforme", "particuliers", "historique")
+# Deux enregistrements décrivent le MÊME bien si, à transaction, ville et type identiques :
+DOUBLON_SURFACE_TOLERANCE = 0.01    # écart relatif de surface <= 1 %
+DOUBLON_JOURS_MAX = 30              # écart entre dates de collecte <= 30 jours
+DOUBLON_MONTANT_TOLERANCE = 0.05    # écart relatif de montant <= 5 % -> doublon probable ; au-delà -> conflit
+# Champs qu'un enregistrement prioritaire peut recevoir d'un doublon probable quand il ne les renseigne pas
+CHAMPS_COMPLETABLES = ("quartier", "region", "periodicite", "pieces", "chambres", "salles_bain", "statut")
+
+# --- Sorties ---
+ENCODAGE_CSV = "utf-8-sig"          # le BOM permet à Excel d'afficher correctement les accents
+PREFIXE_ID_BIEN = "BIEN-"
+
+# --- Phase 6 : analyse ---
+# Un prix/m² n'est calculé que si prix ET surface sont « fiables » : aucun de ces avertissements, pas de conflit de prix.
+AVERTISSEMENTS_EXCLUS_ANALYSE = ("surface_atypique", "surface_hors_fourchette_type", "prix_atypique",
+                                 "prix_hors_fourchette_type", "prix_m2_hors_fourchette_type", "loyer_atypique")
+ANALYSE_N_MIN_GROUPE = 5            # en dessous, un groupe est signalé « effectif faible » (jamais masqué)
